@@ -44,7 +44,7 @@ const App = () => {
           <br />
           {suggestedText && (
             <p className=' text-stone-800'>
-              Did you mean : <b>{suggestedText}</b>
+              Did you mean : <b>{suggestedText}?</b>
             </p>
           )}
         </article>
