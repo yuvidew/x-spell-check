@@ -1,54 +1,60 @@
-import React, { useState } from 'react'
-import { Textarea } from './components/ui/textarea'
+import { useState } from 'react'
+import { Textarea } from './components/ui/textarea';
 
-const customDictionary = {
-  teh: "the",
-  wrok: "work",
-  fot: "for",
-  exampl: "example",
-};
 
-const App = () => {
-  const [input , setInput] = useState('');
-  const [suggestedText , setSuggestedText] = useState('');
+function App() {
 
-  const onCheck = (text) => {
+  const [inputText, setInputText] = useState("")
+  const [suggestedText, setSuggestedText] = useState("")
+
+  const customDictionary = {
+    teh: "the",
+    wrok: "work",
+    fot: "for",
+    exampl: "example",
+  };
+
+  const handleInputChange = (e) => {
+    const text = e.target.value;
+    setInputText(text)
+
+    // Implement a basic spelling check and correction
     const words = text.split(" ");
+    const correctedWords = words.map((word) => {
+    const correctedWord = customDictionary[word.toLowerCase()];
+    return correctedWord || word;
+  });
 
-    
-    const writeWord = words.map((ele) => customDictionary[ele.toLowerCase()] || ele)
-    
-    const writeText = writeWord.join('')
-    
-    const firstCorrection = writeWord.find((word , index) => word !== words[index])
-    console.log(writeWord);
+  const correctedText = correctedWords.join(" ");
 
-    setSuggestedText(firstCorrection || "")
-  }
+  // Set the suggested text (first corrected word)
+  const firstCorrection = correctedWords.find(
+    (word, index) => word !== words[index]
+  );
+  setSuggestedText(firstCorrection || "" );
 
-  const onChange = (e) => {
-    setInput(e.target.value);
-    onCheck(e.target.value)
   }
 
   return (
-    <div className=' flex items-center justify-center h-[100vh]'>
-        <article className=' w-[30rem]'>
-          <h1 className=' mb-5 font-medium text-[1.3rem]'>Spell Check and Auto-Correction</h1>
-          <Textarea 
-            className = "border-2 focus:outline-none border-stone-800 resize-none h-[10rem]" 
-            placeholder = "Enter text..."
-            value = {input}
-            onChange = {onChange}
-          />
-          <br />
-          {suggestedText && (
-            <p className=' text-stone-800'>
-              Did you mean : <b>{suggestedText}</b>?
-            </p>
-          )}
-        </article>
-    </div>
+    <section className=' flex items-center justify-center h-[100vh]'>
+      <div className=' w-[30rem]'>
+
+        <h1 className=' font-medium mb-5 text-[1.6rem]'>Spell Check and Auto-Correction</h1>
+        <Textarea
+          value={inputText}
+          onChange={handleInputChange}
+          placeholder="Enter text..."
+          className = " border-2 border-stone-800"
+          rows={5}
+          cols={40}
+        />
+        {suggestedText && (
+          <p className=' mt-3'>
+            Did you mean: <strong>{suggestedText}</strong>?
+          </p>
+        )}
+      </div>
+    </section>
   )
 }
 
